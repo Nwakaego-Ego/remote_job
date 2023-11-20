@@ -2,26 +2,49 @@
 
 import React, { useState } from "react";
 
-import { auth } from "../Config/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, googleProvider } from "../Config/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
+
 import "./navbar.css";
 
 const Navbar = () => {
-  const [registerEmail, setRegisterEmail] = useState();
-  const [registerPassword, setRegisterPassword] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  console.log(auth.currentUser ? auth.currentUser.email : "No current user");
+  console.log(auth?.currentUser?.email);
 
   const registerUser = async (e) => {
     e.preventDefault();
     try {
       console.log("Trying to register user...");
-      await createUserWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPassword
-      );
+      await createUserWithEmailAndPassword(auth, email, password);
       console.log("User registered successfully!");
     } catch (error) {
       console.error("Error registering user:", error.message);
+    }
+  };
+
+  const registerUserWithGoogle = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("Trying to register user...");
+      await signInWithPopup(auth, googleProvider);
+      console.log("User registered successfully!");
+    } catch (error) {
+      console.error("Error registering user:", error.message);
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -48,7 +71,7 @@ const Navbar = () => {
                 name="email"
                 className="block rounded-md border bg-gray-100 border-gray-300 focus:outline-none focus:border-skyblueEgo my-4 h-10 pl-5 w-5/6 lg:w-full"
                 placeholder="Enter your email"
-                onChange={(e) => setRegisterEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -61,14 +84,27 @@ const Navbar = () => {
                 name="password"
                 className="block rounded-md border bg-gray-100  border-gray-300 focus:outline-none focus:border-skyblueEgo my-4 h-10 pl-5 w-5/6 lg:w-full"
                 placeholder="Enter your password"
-                onChange={(e) => setRegisterPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <button
               onClick={registerUser}
               className="w-80 h-12 bg-teal-500 rounded-lg font-normal text-base leading-5 text-white border border-transparent"
             >
-              Send
+              Email and Password
+            </button>
+            <button
+              onClick={registerUserWithGoogle}
+              className="w-80 h-12 bg-teal-500 rounded-lg font-normal text-base leading-5 text-white border border-transparent"
+            >
+              Google sign in
+            </button>
+            <button
+              onClick={signOut}
+              className="w-80 h-12 bg-teal-500 rounded-lg font-normal text-base leading-5 text-white border border-transparent"
+            >
+              Log out
             </button>
           </div>
         </nav>
