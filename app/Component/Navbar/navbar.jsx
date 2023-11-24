@@ -8,21 +8,48 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 import "./navbar.css";
 
 const Navbar = () => {
+  const router = useRouter();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   console.log(auth.currentUser ? auth.currentUser.email : "No current user");
   console.log(auth?.currentUser?.email);
 
+  // const registerUser = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     console.log("Trying to register user...");
+  //     await createUserWithEmailAndPassword(auth, email, password);
+  //     <Link href="/hello"></Link>;
+  //     console.log("User registered successfully!");
+  //   } catch (error) {
+  //     console.error("Error registering user:", error.message);
+  //   }
+  // };
+
+  // const registerUserWithGoogle = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     console.log("Trying to register user...");
+  //     await signInWithPopup(auth, googleProvider);
+  //     <Link href="/hello"></Link>;
+  //     console.log("User registered successfully!");
+  //   } catch (error) {
+  //     console.error("Error registering user:", error.message);
+  //   }
+  // };
+
   const registerUser = async (e) => {
     e.preventDefault();
     try {
       console.log("Trying to register user...");
       await createUserWithEmailAndPassword(auth, email, password);
+      router.push("/hello"); // Use router.push to navigate programmatically
       console.log("User registered successfully!");
     } catch (error) {
       console.error("Error registering user:", error.message);
@@ -34,6 +61,7 @@ const Navbar = () => {
     try {
       console.log("Trying to register user...");
       await signInWithPopup(auth, googleProvider);
+      router.push("/hello"); // Use router.push to navigate programmatically
       console.log("User registered successfully!");
     } catch (error) {
       console.error("Error registering user:", error.message);
